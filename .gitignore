@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+ 
+# Virtual envs - don't commit these
+venv/
+.venv/
+env/
+ 
+# Secrets/config - never commit
+.env
+*.secret
+ 
+# Logs & local data
+*.log
+*.sqlite3
+data/
+models/
+ 
+# macOS
+.DS_Store
+.AppleDouble
+._*
+.Spotlight-V100
+.Trashes
+ 
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+ 
+# IDEs
+.vscode/
+.idea/
+*.swp
+*~
