@@ -33,6 +33,11 @@ def is_not_looking():
                     status.append((False, "Locked in"))
         else:
             print("No face detected")
+            '''ARE we considering this as a distraction? I think we should, because it means the user is not looking at the screen at all.
+            but may be doning other work on the desk, so we can say "Away from desk?" instead of "No face detected"
+            status.append((True, "No face detected (Away from desk?)"))
+            '''
+            
     
     return status
 
