@@ -31,6 +31,11 @@ try:
 
         capture_count += 1
         time.sleep(5)
+        
+        '''
+        change sleep to non blocking code pls, so that we can capture images while the main.py is running and analyzing the images.
+        we can use time.time() to check the elapsed time and capture images every 5 seconds
+        '''
 
 except KeyboardInterrupt:
     print("\nStopped by user.")
