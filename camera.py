@@ -1,7 +1,6 @@
 import cv2
 import os
 import time
-from datetime import datetime
 
 save_folder = "captured_images"
 os.makedirs(save_folder, exist_ok=True)
@@ -12,28 +11,30 @@ if not cap.isOpened():
     raise RuntimeError("Could not open camera")
 
 print("Camera started. Taking a picture every 5 seconds.")
-print("Press q in the camera window to stop.")
+print("Only 5 files will be kept at once.")
+print("Press Ctrl+C to stop.")
 
-last_capture_time = 0
+capture_count = 0
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        print("Failed to capture image")
-        break
+try:
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to capture image")
+            break
 
-    cv2.imshow("Camera", frame)
+        file_index = capture_count % 5
+        filename = os.path.join(save_folder, f"photo_{file_index}.jpg")
 
-    current_time = time.time()
-    if current_time - last_capture_time >= 5:
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = os.path.join(save_folder, f"photo_{timestamp}.jpg")
         cv2.imwrite(filename, frame)
         print(f"Saved: {filename}")
-        last_capture_time = current_time
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        capture_count += 1
+        time.sleep(5)
 
-cap.release()
-cv2.destroyAllWindows()
+except KeyboardInterrupt:
+    print("\nStopped by user.")
+
+finally:
+    cap.release()
+    cv2.destroyAllWindows()
