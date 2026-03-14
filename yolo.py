@@ -5,7 +5,7 @@ model = YOLO("yolov8n.pt")
 PERSON = 0
 PHONE  = 67
 
-image_path = "captured_images/photo_4.jpg"
+
 
 
 def is_on_phone(result):
@@ -22,8 +22,10 @@ def is_on_phone(result):
                 return True 
     return False  
 
-for result in model(image_path):
-    status = "Doomscrolling" if is_on_phone(result) else "Locked in"
-    print(status)
+for i in range(0,5):
+    image_path = f"captured_images/photo_{i}.jpg"
+    for result in model(image_path):
+        status = "Doomscrolling" if is_on_phone(result) else "Locked in"
+        print(status)
 
 
