@@ -10,3 +10,5 @@ numpy>=1.24.0
 # Utilities
 python-dateutil>=2.8.0
 
+# Hardware communication
+pyserial>=3.5
