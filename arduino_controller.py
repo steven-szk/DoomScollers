@@ -53,11 +53,11 @@ if __name__ == "__main__":
         # Example usage: send a command every 5 seconds
         while True:
             arduino_controller.send_command(0)  # Simulate "Locked in"
-            time.sleep(5)
+            time.sleep(2)
             arduino_controller.send_command(1)  # Simulate "Distracted"
-            time.sleep(5)
+            time.sleep(2)
             arduino_controller.send_command(2)  # Simulate "Vibrate"
-            time.sleep(5)
+            time.sleep(2)
     except KeyboardInterrupt:
         print("Stopping Arduino communication.")
     finally: #always close the connection when done
