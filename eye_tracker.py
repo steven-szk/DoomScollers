@@ -59,9 +59,9 @@ def is_not_looking():
             elif yaw < -15:
                 status.append((True, "Looking left"))
             elif pitch > 15:
-                status.append((True, "Looking up"))
-            elif pitch < -15:
                 status.append((False, "Looking down"))
+            elif pitch < -15:
+                status.append((True, "Looking up"))
             else:
                 status.append((False, "Locked in"))
     else:
@@ -70,4 +70,4 @@ def is_not_looking():
     return status
 
 
-print(is_not_looking())
+#print(is_not_looking())
