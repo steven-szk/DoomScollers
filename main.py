@@ -52,14 +52,14 @@ def main():
             # Distracted if: phone is detected OR eyes are wandering
             is_distracted = phone_detected or (eyes_wandering and phone_off_table)
             
-            # adds distracted state to matlab read file
-            write_file(is_distracted) 
+ 
 
             if not is_distracted:
                 print("GREEN")
                 arduino.send_command(0)
                 yellow_start_time = None  # Reset the 5-minute timer
-                
+                # adds distracted state to matlab read file
+                write_file("Green")
             else:
                 # If we just became distracted, start the stopwatch
                 if yellow_start_time is None:
@@ -70,6 +70,8 @@ def main():
                 
                 if time_in_yellow >= DISTRACTION_THRESHOLD:
                     print(f"RED: Distracted for {DISTRACTION_THRESHOLD} seconds!")
+                    # adds distracted state to matlab read file
+                    write_file("Red")
                     arduino.send_command(2)
                 else:
                     # Still in the warning window
@@ -79,6 +81,8 @@ def main():
                     
                     reason = "Phone detected" if phone_detected else "Eyes wandering and phone not on table"
                     print(f"YELLOW: {reason}! (Red alert in {min_left}m {sec_left}s)")
+                    # adds distracted state to matlab read file
+                    write_file("Yellow")
                     arduino.send_command(1)
 
             # Wait before checking the next batch
