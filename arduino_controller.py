@@ -38,6 +38,20 @@ class ArduinoController: #make the arduino controller a class so we can easily m
         else:
             print(f"(Simulation): {command}")
 
+    def read_serial(self):
+        """Reads and prints any incoming data from the Arduino."""
+        if self.arduino and self.arduino.is_open:
+            try:
+                # Check if there is data waiting in the buffer
+                if self.arduino.in_waiting > 0:
+                    incoming_data = self.arduino.readline().decode('utf-8').strip()
+                    if incoming_data:
+                        print(f"Arduino says: {incoming_data}")
+                    return incoming_data
+            except Exception as e:
+                print(f"Error reading from Arduino: {e}")
+        return None
+
     def close(self):
         if self.arduino and self.arduino.is_open:
             self.arduino.close()
@@ -51,10 +65,15 @@ if __name__ == "__main__":
         # Example usage: send a command every 5 seconds
         while True:
             arduino_controller.send_command(0)  # Simulate "Locked in"
+            arduino_controller.read_serial()    # Check for incoming messages
             time.sleep(2)
+            
             arduino_controller.send_command(1)  # Simulate "Distracted"
+            arduino_controller.read_serial()    # Check for incoming messages
             time.sleep(2)
+            
             arduino_controller.send_command(2)  # Simulate "Vibrate"
+            arduino_controller.read_serial()    # Check for incoming messages
             time.sleep(2)
     except KeyboardInterrupt:
         print("Stopping Arduino communication.")
