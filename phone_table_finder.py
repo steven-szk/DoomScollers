@@ -68,7 +68,7 @@ def PhoneOrientationOffTable(file_path="PhoneSensorData.csv", threshold_deg=10):
         # 3. Get the most recent reading (the very last row)
         last_row = df.iloc[-1]
         
-        # Extract the absolute angles (we don't care if it's tilted positively or negatively)
+        # Extract the absolute angles of last row of csv
         left_right = abs(last_row['LeftRight_deg'])
         vertical = abs(last_row['Vertical_deg'])
         
@@ -100,3 +100,14 @@ def phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
     
     # If either check indicates the phone is off the table, return True
     return ultrasonic_off or orientation_off
+
+if __name__ == "__main__":
+    # Example usage:
+    # Simulate some Arduino serial data
+    test_serial_data = "D:15"  # Example distance reading (15 cm)
+    
+    # Check if the phone is off the table
+    if phone_off_table(test_serial_data):
+        print("Phone is OFF the table!")
+    else:
+        print("Phone is ON the table.")
