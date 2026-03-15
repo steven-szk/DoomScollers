@@ -1,7 +1,8 @@
 import time
 import os
-from log import reset_file, write_file
 
+print("Importing log module")
+from log import reset_file, write_file
 print("Importing camera module")
 from camera import capture_image, release_camera
 print("Importing phone tracker")
@@ -13,7 +14,7 @@ from arduino_controller import ArduinoController
 
 
 def main():
-    DISTRACTION_THRESHOLD = 300  # 5 minutes until red alert
+    DISTRACTION_THRESHOLD = 3  # 5 minutes until red alert
     '''
     looks at the batch of 5 photos, checks if any of them caught you slipping, 
     and sends the command.
