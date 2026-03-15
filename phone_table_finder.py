@@ -30,6 +30,8 @@ def PhoneUltrasonicOffTable(serial_data, threshold_cm=4):
         # If the distance is smaller than threshold, phone is on the table
         if distance < threshold_cm:
             return False
+        elif distance >= 180:
+            return True # If the distance is very large, it's likely the sensor is just not detecting anything (e.g., phone is far away or picked up but not facing sensor), so we can treat it as off the table. This also accounts for cases where the phone is picked up but the sensor can't get a reading because it's facing the wrong way.
         else:
             # The phone is resting close to the sensor
             return True

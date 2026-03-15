@@ -97,7 +97,7 @@ void readAndSendDistance() {
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
   
-  long duration = pulseIn(ECHO_PIN, HIGH, 15000); 
+  long duration = pulseIn(ECHO_PIN, HIGH, 20000); 
   int distanceCm = duration * 0.0343 / 2;
   
   if (duration == 0) {
