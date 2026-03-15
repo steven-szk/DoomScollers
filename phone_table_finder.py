@@ -39,7 +39,7 @@ def PhoneUltrasonicOffTable(serial_data, threshold_cm=4):
     except ValueError:
         # Just in case the Arduino sends a corrupted/garbled message
         print(f"Could not parse distance from: {serial_data}")
-        return None
+        return False
 
 #read csv from phone sensor matlab code
 def PhoneOrientationOffTable(file_path="PhoneSensorData.csv", threshold_deg=10):
@@ -100,7 +100,8 @@ def is_phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
     # Check if the phone is off the table based on orientation data
     orientation_off = PhoneOrientationOffTable(file_path)
     
-    # If either check indicates the phone is off the table, return True
+    # If either check indicates the phone is off the table, return True\
+    print(ultrasonic_off, orientation_off )
     return ultrasonic_off or orientation_off
 
 if __name__ == "__main__":
