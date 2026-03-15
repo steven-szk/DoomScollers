@@ -1,5 +1,6 @@
 import time
 import os
+from log import reset_file, write_file
 
 print("Importing camera module")
 from camera import capture_image, release_camera
@@ -9,6 +10,7 @@ print("Importing eye tracker")
 from eye_tracker import is_not_looking
 print("Importing Arduino controller")
 from arduino_controller import ArduinoController
+
 
 def main():
     DISTRACTION_THRESHOLD = 300  # 5 minutes until red alert
@@ -23,6 +25,8 @@ def main():
     print("Starting Distraction Monitor...")
     arduino = ArduinoController(port='COM12') # Change COM, initiate arduino connection
     yellow_start_time = None # This variable stores when first got distracted, none if currently locked in, timestamp if currently distracted
+
+    reset_file()
     
     print("\nMonitoring active! Press Ctrl+C to stop.")
 
@@ -38,9 +42,11 @@ def main():
             # check if ANY of the frames flagged a distraction, essentially, only one frame is in the list
             # The trackers return tuples (True, "msg"), check index [0]
             phone_detected = any(status[0] for status in phone_data)
-            #print(f"Phone Tracker Data: {phone_data}")
+
             eyes_wandering = any(status[0] for status in eye_data)
-            print(f"Eye Tracker Data: {eye_data}")
+
+
+            write_file((phone_data, eye_data)) # adds both statuses to a text file to be given to matlab
             
             phone_off_table = True # Placeholder - we can add this logic later based on the phone tracker data (e.g., if phone is detected but not on table, we might still consider it a distraction)
             '''EDIT THIS WITH ULTRASONIC OR MATLAB DATA'''

@@ -39,3 +39,6 @@ $RECYCLE.BIN/
 
 # Photo
 captured_images/photo.jpg
+
+# Data
+log.txt
