@@ -22,7 +22,7 @@ def capture_image():
         
     filename = os.path.join(save_folder, "photo.jpg")
     cv2.imwrite(filename, frame)
-    print(f"Pic Saved: {filename}")
+    #print(f"Pic Saved: {filename}")
     
     return True
 
