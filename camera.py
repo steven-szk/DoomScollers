@@ -14,7 +14,6 @@ print("Camera started. Taking a picture every 5 seconds.")
 print("Only 5 files will be kept at once.")
 print("Press Ctrl+C to stop.")
 
-capture_count = 0
 interval = 5.0
 last_run = time.monotonic()
 
@@ -28,13 +27,11 @@ try:
             break
         
         if now - last_run >= interval:
-            file_index = capture_count % 5
-            filename = os.path.join(save_folder, f"photo_{file_index}.jpg")
+            filename = os.path.join(save_folder, f"photo.jpg")
 
             cv2.imwrite(filename, frame)
             print(f"Saved: {filename}")
 
-            capture_count += 1
             last_run = now
         
         '''
