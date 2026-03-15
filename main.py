@@ -2,7 +2,7 @@ import time
 import os
 
 print("Importing camera module")
-from camera import capture_image
+from camera import capture_image, release_camera
 print("Importing phone tracker")
 from phone_tracker import person_status
 print("Importing eye tracker")
@@ -76,6 +76,8 @@ def main():
         print("\nStopping monitor...")
     finally:
         arduino.close() #Close the Arduino connection when done
+        release_camera() #Release the camera when done
+        
 
 if __name__ == "__main__":
     main()
