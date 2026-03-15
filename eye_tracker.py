@@ -1,7 +1,6 @@
 import mediapipe as mp
 import cv2
 
-
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)  
 
@@ -38,7 +37,6 @@ def is_not_looking():
             status.append((True, "No face detected (Away from desk?)"))
             '''
             
-    
     return status
 
 
