@@ -34,7 +34,7 @@ class ArduinoController: #make the arduino controller a class so we can easily m
         if self.arduino and self.arduino.is_open:
             # Send the command as bytes (e.g., b'S0')
             self.arduino.write(command.encode('utf-8'))
-            print(f"Sentto Arduino: {command}")
+            print(f"Sent to Arduino: {command}")
         else:
             print(f"(Simulation): {command}")
 

@@ -1,5 +1,4 @@
 from ultralytics import YOLO
-import threading
 
 model = YOLO("yolov8s.pt")  
 
