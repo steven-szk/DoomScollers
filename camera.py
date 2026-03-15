@@ -16,10 +16,13 @@ print("Press Ctrl+C to stop.")
 
 capture_count = 0
 interval = 5.0
+last_run = time.monotonic()
 
 try:
     while True:
         ret, frame = cap.read()
+        now = time.monotonic()
+        
         if not ret:
             print("Failed to capture image")
             break
