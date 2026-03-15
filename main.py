@@ -1,7 +1,10 @@
 import time
 import os
+print("Importing phone tracker")
 from phone_tracker import person_status
+print("Importing eye tracker")
 from eye_tracker import is_not_looking
+print("Importing Arduino controller")
 from arduino_controller import ArduinoController
 
 def main():
