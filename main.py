@@ -52,9 +52,8 @@ def main():
             phone_off_table = is_phone_off_table(arduino_message, "PhoneSensorData.csv") #check if phone is off the table based on ultrasonic and orientation data
 
             # Distracted if: phone is detected OR eyes are wandering
-            is_distracted = phone_detected or (eyes_wandering and phone_off_table)
+            is_distracted = phone_detected or (eyes_wandering and phone_off_table) or (((eye_data[0])[1] == "Looking Down") and phone_off_table )
             
- 
 
             if not is_distracted:
                 print("GREEN")
