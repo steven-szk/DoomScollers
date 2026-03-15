@@ -66,7 +66,7 @@ def main():
                     sec_left = time_left % 60
                     
                     reason = "Phone detected" if phone_detected else "Eyes wandering and phone not on table"
-                    print(f"⚠️ {reason}! Sending YELLOW. (Red alert in {min_left}m {sec_left}s)")
+                    print(f"{reason}! Sending YELLOW. (Red alert in {min_left}m {sec_left}s)")
                     arduino.send_command(1)
 
             # Wait 5 seconds before checking the next batch
