@@ -4,7 +4,7 @@ clear; clc;
 % -------- User settings --------
 baseUrl  = "http://172.20.10.1";   % <-- replace with your phone's phyphox URL
 duration = 5;                           % seconds to run
-dt       = 0.2;                          % polling interval in seconds
+dt       = 0.1;                          % polling interval in seconds
 
 % Buffers you want
 bufT  = "t";
@@ -80,4 +80,5 @@ T = table(tVals(1:k), lrVals(1:k), udVals(1:k), ...
     'VariableNames', {'Time_s','LeftRight_deg','Vertical_deg'});
 
 writetable(T, 'PhoneSensorData.csv');
-
+disp(T)
+writetable(T, 'phyphox_live_tilt_data.csv');
