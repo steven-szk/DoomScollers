@@ -2,7 +2,7 @@ import serial
 import time
 
 class ArduinoController: #make the arduino controller a class so we can easily manage the connection and sending commands from main.py
-    def __init__(self, port='COM3', baudrate=9600): #Default port and baudrate
+    def __init__(self, port='COM12', baudrate=9600): #Default port and baudrate
         """
         Initializes the serial connection to the Arduino.
         Change 'COM3' to whatever port your Arduino is plugged into 
