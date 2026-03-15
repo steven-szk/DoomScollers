@@ -28,6 +28,9 @@ def main():
 
     try:
         while True:
+            #Take a picture every second and save it (overwriting the previous one)
+            capture_image()
+            
             # Grab the latest reports from trackers
             phone_data = person_status()
             eye_data = is_not_looking()
