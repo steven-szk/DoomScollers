@@ -1,63 +1,86 @@
-%% Live phyphox inclination acquisition -> save CSV only
+%% Live phyphox inclination acquisition -> append to CSV until key press
 clear; clc;
 
 % -------- User settings --------
 baseUrl  = "http://172.20.10.1";   % replace with your phone's phyphox URL
-duration = 5;                      % seconds to run
 dt       = 0.1;                    % polling interval in seconds
+fileName = fullfile(pwd, 'PhoneSensorData.csv');
 
 % Buffers you want
 bufT  = "t";
-bufLR = "tiltFlatLR";    % left/right
-bufUD = "tiltFlatUD";    % vertical (up/down)
+bufLR = "tiltFlatLR";
+bufUD = "tiltFlatUD";
 
-% -------- Make sure remote interface is reachable --------
+% -------- Check connection --------
 webread(baseUrl + "/config", weboptions("ContentType","json","Timeout",5));
+
+% -------- Create/overwrite CSV and write header --------
+fid = fopen(fileName, 'w');
+fprintf(fid, 'Time_s,LeftRight_deg,Vertical_deg\n');
+fclose(fid);
 
 % -------- Reset and start experiment --------
 webread(baseUrl + "/control?cmd=clear", weboptions("ContentType","json","Timeout",5));
 pause(0.2);
 webread(baseUrl + "/control?cmd=start", weboptions("ContentType","json","Timeout",5));
 
-% -------- Storage --------
-nMax = ceil(duration/dt) + 10;
-tVals  = nan(nMax,1);
-lrVals = nan(nMax,1);
-udVals = nan(nMax,1);
+% -------- Control window --------
+stopFig = figure( ...
+    'Name', 'phyphox acquisition control', ...
+    'NumberTitle', 'off', ...
+    'MenuBar', 'none', ...
+    'ToolBar', 'none', ...
+    'Color', 'w', ...
+    'KeyPressFcn', @(src,event) setappdata(src, 'stopNow', true));
 
-% -------- Live acquisition loop --------
-k = 0;
-tStart = tic;
+setappdata(stopFig, 'stopNow', false);
 
-while toc(tStart) < duration
-    try
-        url = baseUrl + "/get?" + bufT + "=1&" + bufLR + "=1&" + bufUD + "=1";
-        data = webread(url, weboptions("ContentType","json","Timeout",5));
+uicontrol( ...
+    'Style', 'text', ...
+    'String', 'Press any key in this window to stop acquisition', ...
+    'Units', 'normalized', ...
+    'Position', [0.1 0.4 0.8 0.2], ...
+    'BackgroundColor', 'w', ...
+    'FontSize', 12);
 
-        tNow  = data.buffer.(bufT).buffer(end);
-        lrNow = data.buffer.(bufLR).buffer(end);
-        udNow = data.buffer.(bufUD).buffer(end);
+lastT = -inf;
 
-        if k == 0 || tNow > tVals(k)
-            k = k + 1;
-            tVals(k)  = tNow;
-            lrVals(k) = lrNow;
-            udVals(k) = udNow;
+try
+    while ishandle(stopFig) && ~getappdata(stopFig, 'stopNow')
+        try
+            url = baseUrl + "/get?" + bufT + "=1&" + bufLR + "=1&" + bufUD + "=1";
+            data = webread(url, weboptions("ContentType","json","Timeout",5));
+
+            tNow  = data.buffer.(bufT).buffer(end);
+            lrNow = data.buffer.(bufLR).buffer(end);
+            udNow = data.buffer.(bufUD).buffer(end);
+
+            % Only append new samples
+            if tNow > lastT
+                fid = fopen(fileName, 'a');
+                fprintf(fid, '%.6f,%.6f,%.6f\n', tNow, lrNow, udNow);
+                fclose(fid);
+
+                lastT = tNow;
+            end
+        catch
+            % Skip failed reads
         end
 
-    catch
-        % skip failed reads
+        drawnow;
+        pause(dt);
     end
-
-    pause(dt);
+catch
+    % Falls through to cleanup below
 end
 
 % -------- Stop experiment --------
-webread(baseUrl + "/control?cmd=stop", weboptions("ContentType","json","Timeout",5));
+try
+    webread(baseUrl + "/control?cmd=stop", weboptions("ContentType","json","Timeout",5));
+catch
+end
 
-% -------- Final table --------
-T = table(tVals(1:k), lrVals(1:k), udVals(1:k), ...
-    'VariableNames', {'Time_s','LeftRight_deg','Vertical_deg'});
-
-% -------- Save CSV to current folder --------
-writetable(T, fullfile(pwd, 'PhoneSensorData.csv'));
+% -------- Close control window if still open --------
+if exist('stopFig', 'var') && ishandle(stopFig)
+    close(stopFig);
+end
