@@ -46,7 +46,8 @@ class ArduinoController: #make the arduino controller a class so we can easily m
                 if self.arduino.in_waiting > 0:
                     incoming_data = self.arduino.readline().decode('utf-8').strip()
                     if incoming_data:
-                        print(f"Arduino: {incoming_data}")
+                        #print(f"Arduino: {incoming_data}")
+                        pass
                     return incoming_data
             except Exception as e:
                 print(f"Error reading from Arduino: {e}")

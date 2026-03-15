@@ -16,7 +16,7 @@ def PhoneUltrasonicOffTable(serial_data, threshold_cm=4):
     """
     # 1. Ignore empty data or messages that aren't from the ultrasonic sensor
     if not serial_data or not serial_data.startswith("D:"):
-        return None 
+        return False 
         
     # 2. Extract the actual reading (Everything after the "D:")
     value_str = serial_data.split(":")[1].strip()
@@ -101,8 +101,8 @@ def is_phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
     orientation_off = PhoneOrientationOffTable(file_path)
     
     # If either check indicates the phone is off the table, return True\
-    print(ultrasonic_off, orientation_off )
-    return ultrasonic_off or orientation_off
+    # print(ultrasonic_off, orientation_off )
+    return orientation_off #ultrasonic need refinement, only use matlab phone pos now.
 
 if __name__ == "__main__":
     # Example usage:

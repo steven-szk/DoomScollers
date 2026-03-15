@@ -52,7 +52,9 @@ def main():
             phone_off_table = is_phone_off_table(arduino_message, "PhoneSensorData.csv") #check if phone is off the table based on ultrasonic and orientation data
 
             # Distracted if: phone is detected OR eyes are wandering
-            is_distracted = phone_detected or (eyes_wandering and phone_off_table) or (((eye_data[0])[1] == "Looking Down") and phone_off_table )
+            print(eye_data[0][1])
+            print(phone_detected)
+            is_distracted = phone_detected or (eyes_wandering and phone_off_table) or (((eye_data[0])[1] == "Looking down") and phone_off_table )
             
 
             if not is_distracted:
@@ -81,7 +83,8 @@ def main():
                     sec_left = time_left % 60
                     
                     reason = "Phone detected" if phone_detected else "Eyes wandering and phone not on table"
-                    print(f"YELLOW: {reason}! (Red alert in {min_left}m {sec_left}s)")
+                    print(f"YELLOW! (Red alert in {min_left}m {sec_left}s)")
+                    print(reason)
                     # adds distracted state to matlab read file
                     write_file("Yellow")
                     arduino.send_command(1)
