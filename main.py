@@ -9,6 +9,8 @@ print("Importing phone tracker")
 from phone_tracker import person_status
 print("Importing eye tracker")
 from eye_tracker import is_not_looking
+print("Importing phone table finder")
+from phone_table_finder import is_phone_off_table
 print("Importing Arduino controller")
 from arduino_controller import ArduinoController
 
@@ -32,8 +34,9 @@ def main():
     print("\nMonitoring active! Press Ctrl+C to stop.")
 
     try:
+        phone_off_table = True # Assume phone is off the table at start, so we don't always get green if csv is empty and no serial reading
         while True:
-            #Take a picture every second and save it (overwriting the previous one)
+            #Take a picture every some time and save it (overwriting the previous one)
             capture_image()
             
             # Grab the latest reports from trackers
@@ -43,11 +46,10 @@ def main():
             # check if ANY of the frames flagged a distraction, essentially, only one frame is in the list
             # The trackers return tuples (True, "msg"), check index [0]
             phone_detected = any(status[0] for status in phone_data)
-
             eyes_wandering = any(status[0] for status in eye_data)
             
-            phone_off_table = True # Placeholder - we can add this logic later based on the phone tracker data (e.g., if phone is detected but not on table, we might still consider it a distraction)
-            '''EDIT THIS WITH ULTRASONIC OR MATLAB DATA'''
+            arduino_message = arduino.read_serial()
+            phone_off_table = is_phone_off_table(arduino_message, "PhoneSensorData.csv") #check if phone is off the table based on ultrasonic and orientation data
 
             # Distracted if: phone is detected OR eyes are wandering
             is_distracted = phone_detected or (eyes_wandering and phone_off_table)

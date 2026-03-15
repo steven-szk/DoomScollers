@@ -82,7 +82,7 @@ def PhoneOrientationOffTable(file_path="PhoneSensorData.csv", threshold_deg=10):
         print(f"⚠️ Error reading {file_path}: {e}")
         return False
 
-def phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
+def is_phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
     """
     Combines both the ultrasonic and orientation checks to determine if the phone is off the table.
     
