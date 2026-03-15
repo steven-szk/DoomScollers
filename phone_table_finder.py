@@ -32,7 +32,7 @@ def PhoneUltrasonicOffTable(serial_data, threshold_cm=4):
             return False
         else:
             # The phone is resting close to the sensor
-            return False 
+            return True
             
     except ValueError:
         # Just in case the Arduino sends a corrupted/garbled message
@@ -104,7 +104,7 @@ def phone_off_table(serial_data, file_path="PhoneSensorData.csv"):
 if __name__ == "__main__":
     # Example usage:
     # Simulate some Arduino serial data
-    test_serial_data = "D:15"  # Example distance reading (15 cm)
+    test_serial_data = "D:Out of range"  # exaple data
     
     # Check if the phone is off the table
     if phone_off_table(test_serial_data):
