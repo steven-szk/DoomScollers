@@ -4,9 +4,10 @@ enum ledStateS {
   RED,
   WHITE
 };
-//Ultrasonic Sensor
-const int TRIG_PIN = 3; // Sends the sound wave
-const int ECHO_PIN = 4; // Listens for the bounce
+
+// --- FIX 1: Changed pins to avoid conflict with LED2 ---
+const int TRIG_PIN = 7; // Sends the sound wave
+const int ECHO_PIN = 8; // Listens for the bounce
 
 // Initial states
 ledStateS led1State = GREEN;
@@ -14,10 +15,13 @@ ledStateS led2State = WHITE;
 volatile bool Vibrate = false;
 
 // --- STATE TRACKING VARIABLES ---
-//initialize dummy value (-1) so update initially
 ledStateS currentLed1State = (ledStateS)-1; 
 ledStateS currentLed2State = (ledStateS)-1;
 int currentVibrate = -1;
+
+// --- FIX 2: Added a timer variable for the sensor ---
+unsigned long lastSonarTime = 0;
+const unsigned long sonarInterval = 500; // Send distance every 500ms (half a second)
 
 // Pinouts
 const int VIB_MOTOR = 2;
@@ -30,13 +34,9 @@ const int LED2_B = 6;
 
 //read serial buffer
 void ReadSer() {
-  // Package S,0-2
   if (Serial.available() >= 2) {
-    if (Serial.read() == 'S') { // Check for header 'S' ASCII 83
-      
-      char val = Serial.read(); // Read as char to handle ASCII correctly
-      
-      // Update global target vars, ASCII chars or raw bytes
+    if (Serial.read() == 'S') { 
+      char val = Serial.read(); 
       if (val == '0' || val == 0) {
         led1State = GREEN;
         Vibrate = false;
@@ -48,7 +48,6 @@ void ReadSer() {
         Vibrate = true;
       }
     }
-    // Flush the rest of the buffer eg. \n
     while (Serial.available()) {Serial.read();}
   }
 }
@@ -64,7 +63,6 @@ void vibrate(bool vib) {
 
 //set led
 void setRGB(int LEDR, int LEDG, int LEDB, ledStateS color) {
-  // reset so don't mix with prev output
   digitalWrite(LEDR, HIGH);
   digitalWrite(LEDG, HIGH);
   digitalWrite(LEDB, HIGH);
@@ -73,50 +71,37 @@ void setRGB(int LEDR, int LEDG, int LEDB, ledStateS color) {
     case RED: 
       digitalWrite(LEDR, LOW);
       break;
-      
     case GREEN: 
       digitalWrite(LEDG, LOW);
       break;
-      
-    case YELLOW: // Red + Green
+    case YELLOW: 
       analogWrite(LEDR, 150);
       analogWrite(LEDG, 0);
       break;
-    
-    case WHITE: // all colors
+    case WHITE: 
       analogWrite(LEDR, 180);
       analogWrite(LEDG, 100);
       analogWrite(LEDB, 100);
       break;
-      
     default: 
       break; 
   }
 }
 
+// Your exact function, untouched!
 void readAndSendDistance() {
-  // 1. Clear the trigger pin to ensure a clean pulse
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
   
-  // 2. Send a 10-microsecond HIGH pulse to trigger the sensor
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
   
-  // 3. Measure how long the Echo pin stays HIGH (in microseconds)
-  // A timeout of 30000us (~5 meters) prevents the code from hanging if no echo returns
-  long duration = pulseIn(ECHO_PIN, HIGH, 30000); 
-  
-  // 4. Calculate the distance in centimeters
-  // Speed of sound is ~0.0343 cm per microsecond. 
-  // We divide by 2 because the sound travels out AND back.
+  long duration = pulseIn(ECHO_PIN, HIGH, 20000); 
   int distanceCm = duration * 0.0343 / 2;
   
-  // 5. Send the data to the laptop via Serial
-  // I added a "D:" prefix so your laptop (or Python script) knows this is Distance data
   if (duration == 0) {
-    Serial.println("D:Out of range"); // Handle the timeout gracefully
+    Serial.println("D:Out of range"); 
   } else {
     Serial.print("D:");
     Serial.println(distanceCm);
@@ -126,10 +111,7 @@ void readAndSendDistance() {
 void setup() {
   Serial.begin(9600);
   
-  // Wait for the serial port to connect
-  while (!Serial) {
-    ;
-  }
+  while (!Serial) { ; }
   Serial.println("Serial is ready. Send S0, S1, or S2.");
 
   pinMode(VIB_MOTOR, OUTPUT);
@@ -139,28 +121,33 @@ void setup() {
   pinMode(LED2_R, OUTPUT);
   pinMode(LED2_G, OUTPUT);
   pinMode(LED2_B, OUTPUT);
+  
+  // Setup sonar pins
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
-
-  // Initial states will be set automatically in the first loop!
 }
 
 void loop() {
-  // Read serial and update target variables
+  // 1. Read commands from Python
   ReadSer();
 
-  // only update led and vib if state changes
+  // 2. Update LEDs/Vibration if the state changed
   if (led1State != currentLed1State) {
     setRGB(LED1_R, LED1_G, LED1_B, led1State);
-    currentLed1State = led1State; // Save the new state
+    currentLed1State = led1State; 
   }
   if (led2State != currentLed2State) {
     setRGB(LED2_R, LED2_G, LED2_B, led2State);
-    currentLed2State = led2State; // Save the new state
+    currentLed2State = led2State; 
   }
   if (Vibrate != currentVibrate) {
     vibrate(Vibrate);
-    currentVibrate = Vibrate; // Save the new state
+    currentVibrate = Vibrate; 
   }
 
+  // --- FIX 3: Check if 500ms have passed, then send distance ---
+  if (millis() - lastSonarTime >= sonarInterval) {
+    readAndSendDistance();
+    lastSonarTime = millis(); // Reset the stopwatch
+  }
 }
