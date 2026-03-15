@@ -38,5 +38,4 @@ if __name__ == "__main__":
         print("Image captured successfully.")
     else:
         print("Image capture failed.")
-    
     release_camera()
