@@ -25,8 +25,8 @@ def main():
     1 = YELLOW (Eyes distracted and phone not on table, or phone detected (eyes unimportant))
     2 = RED + Vibrate (when yellow for 5 minutes)
     '''
-    print("Starting Distraction Monitor...")
-    arduino = ArduinoController(port='COM12') # Change COM, initiate arduino connection
+    print("Starting Distraction Monitor...") #'COM12' for windows
+    arduino = ArduinoController(port='/dev/cu.usbserial-10') # Change COM, initiate arduino connection
     yellow_start_time = None # This variable stores when first got distracted, none if currently locked in, timestamp if currently distracted
 
     reset_file()
