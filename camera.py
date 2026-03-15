@@ -15,6 +15,7 @@ print("Only 5 files will be kept at once.")
 print("Press Ctrl+C to stop.")
 
 capture_count = 0
+interval = 5.0
 
 try:
     while True:
