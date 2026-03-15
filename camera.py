@@ -1,47 +1,29 @@
 import cv2
 import os
-import time
 
-save_folder = "captured_images"
-os.makedirs(save_folder, exist_ok=True)
 
-cap = cv2.VideoCapture(0)
+def capture_image():
+    
+    save_folder = "captured_images"
+    os.makedirs(save_folder, exist_ok=True) 
+    # Checks/makes the folder
 
-if not cap.isOpened():
-    raise RuntimeError("Could not open camera")
+    cap = cv2.VideoCapture(0)
+    
+    if not cap.isOpened():
+        raise RuntimeError("Could not open camera")
 
-print("Camera started. Taking a picture every 5 seconds.")
-print("Only 5 files will be kept at once.")
-print("Press Ctrl+C to stop.")
-
-interval = 5.0
-last_run = time.monotonic()
-
-try:
-    while True:
+    try:
         ret, frame = cap.read()
-        now = time.monotonic()
-        
+
         if not ret:
             print("Failed to capture image")
             break
         
-        if now - last_run >= interval:
-            filename = os.path.join(save_folder, f"photo.jpg")
+        filename = os.path.join(save_folder, f"photo.jpg")
+        print(filename)
+        cv2.imwrite(filename, frame)
 
-            cv2.imwrite(filename, frame)
-            print(f"Saved: {filename}")
-
-            last_run = now
-        
-        '''
-        change sleep to non blocking code pls, so that we can capture images while the main.py is running and analyzing the images.
-        we can use time.time() to check the elapsed time and capture images every 5 seconds
-        '''
-
-except KeyboardInterrupt:
-    print("\nStopped by user.")
-
-finally:
-    cap.release()
-    cv2.destroyAllWindows()
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
