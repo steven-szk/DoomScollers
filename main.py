@@ -47,7 +47,7 @@ def main():
             is_distracted = phone_detected or (eyes_wandering and phone_off_table)
 
             if not is_distracted:
-                print("Locked in! Sending GREEN.")
+                print("GREEN")
                 arduino.send_command(0)
                 yellow_start_time = None  # Reset the 5-minute timer
                 
@@ -60,7 +60,7 @@ def main():
                 time_in_yellow = time.time() - yellow_start_time
                 
                 if time_in_yellow >= DISTRACTION_THRESHOLD:
-                    print(f"Distracted for {DISTRACTION_THRESHOLD} seconds! Sending RED + VIBRATE.")
+                    print(f"RED: Distracted for {DISTRACTION_THRESHOLD} seconds!")
                     arduino.send_command(2)
                 else:
                     # Still in the warning window
@@ -69,7 +69,7 @@ def main():
                     sec_left = time_left % 60
                     
                     reason = "Phone detected" if phone_detected else "Eyes wandering and phone not on table"
-                    print(f"{reason}! Sending YELLOW. (Red alert in {min_left}m {sec_left}s)")
+                    print(f"YELLOW: {reason}! (Red alert in {min_left}m {sec_left}s)")
                     arduino.send_command(1)
 
             # Wait before checking the next batch
