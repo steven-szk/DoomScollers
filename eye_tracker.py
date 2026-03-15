@@ -41,33 +41,31 @@ def get_head_pose(face, img_w, img_h):
 
 def is_not_looking():
     status = []
-    for i in range(5):
-        image_path = f"captured_images/photo_{i}.jpg"
-        img = cv2.imread(image_path)
-        if img is None:
-            status.append((True, "Image not found"))
-            continue
+    image_path = f"captured_images/photo.jpg"
+    img = cv2.imread(image_path)
+    if img is None:
+        status.append((True, "Image not found"))
 
-        h, w = img.shape[:2]
-        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        result = face_mesh.process(rgb)
+    h, w = img.shape[:2]
+    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    result = face_mesh.process(rgb)
 
-        if result.multi_face_landmarks:
-            for face in result.multi_face_landmarks:
-                pitch, yaw, roll = get_head_pose(face, w, h)
+    if result.multi_face_landmarks:
+        for face in result.multi_face_landmarks:
+            pitch, yaw, roll = get_head_pose(face, w, h)
 
-                if yaw > 15:
-                    status.append((True, "Looking right"))
-                elif yaw < -15:
-                    status.append((True, "Looking left"))
-                elif pitch > 15:
-                    status.append((True, "Looking up"))
-                elif pitch < -15:
-                    status.append((False, "Looking down"))
-                else:
-                    status.append((False, "Locked in"))
-        else:
-            status.append((True, "Away from screen"))
+            if yaw > 15:
+                status.append((True, "Looking right"))
+            elif yaw < -15:
+                status.append((True, "Looking left"))
+            elif pitch > 15:
+                status.append((True, "Looking up"))
+            elif pitch < -15:
+                status.append((False, "Looking down"))
+            else:
+                status.append((False, "Locked in"))
+    else:
+        status.append((True, "Away from screen"))
 
     return status
 
