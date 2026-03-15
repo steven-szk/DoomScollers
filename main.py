@@ -45,15 +45,15 @@ def main():
             phone_detected = any(status[0] for status in phone_data)
 
             eyes_wandering = any(status[0] for status in eye_data)
-
-
-            write_file((phone_data, eye_data)) # adds both statuses to a text file to be given to matlab
             
             phone_off_table = True # Placeholder - we can add this logic later based on the phone tracker data (e.g., if phone is detected but not on table, we might still consider it a distraction)
             '''EDIT THIS WITH ULTRASONIC OR MATLAB DATA'''
 
             # Distracted if: phone is detected OR eyes are wandering
             is_distracted = phone_detected or (eyes_wandering and phone_off_table)
+            
+            # adds distracted state to matlab read file
+            write_file(is_distracted) 
 
             if not is_distracted:
                 print("GREEN")

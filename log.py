@@ -1,6 +1,6 @@
 
 def reset_file():
-    open("myfile.txt", "w").close()
+    open("log.txt", "w").close()
 
 
 def write_file(status):
