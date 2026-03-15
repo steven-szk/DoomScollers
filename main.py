@@ -21,7 +21,7 @@ def main():
     2 = RED + Vibrate (when yellow for 5 minutes)
     '''
     print("Starting Distraction Monitor...")
-    arduino = ArduinoController(port='COM3') # Change COM3 if needed!, initiate arduino connection
+    arduino = ArduinoController(port='COM12') # Change COM, initiate arduino connection
     yellow_start_time = None # This variable stores when first got distracted, none if currently locked in, timestamp if currently distracted
     
     print("\nMonitoring active! Press Ctrl+C to stop.")
@@ -38,7 +38,9 @@ def main():
             # check if ANY of the frames flagged a distraction, essentially, only one frame is in the list
             # The trackers return tuples (True, "msg"), check index [0]
             phone_detected = any(status[0] for status in phone_data)
+            #print(f"Phone Tracker Data: {phone_data}")
             eyes_wandering = any(status[0] for status in eye_data)
+            print(f"Eye Tracker Data: {eye_data}")
             
             phone_off_table = True # Placeholder - we can add this logic later based on the phone tracker data (e.g., if phone is detected but not on table, we might still consider it a distraction)
             '''EDIT THIS WITH ULTRASONIC OR MATLAB DATA'''
