@@ -44,8 +44,6 @@ class ArduinoController: #make the arduino controller a class so we can easily m
             print("Arduino connection closed.")
             
 
-            
-            
 #Debug code
 if __name__ == "__main__": 
     arduino_controller = ArduinoController()
