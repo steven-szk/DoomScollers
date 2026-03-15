@@ -27,11 +27,10 @@ def is_on_phone(result):
 
 def person_status():
     status = []
-    for i in range(0,5):
-        image_path = f"captured_images/photo_{i}.jpg"
-        # verbose false just stops the model from printing specifics
-        for result in model(image_path,verbose=False):
-            status.append((True, "Doomscrolling")) if is_on_phone(result) else status.append((False, "Locked in"))
+    image_path = f"captured_images/photo.jpg"
+    # verbose false just stops the model from printing specifics
+    for result in model(image_path,verbose=False):
+        status.append((True, "Doomscrolling")) if is_on_phone(result) else status.append((False, "Locked in"))
     return status
 
 
