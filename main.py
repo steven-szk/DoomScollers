@@ -69,7 +69,7 @@ def main():
                     print(f"{reason}! Sending YELLOW. (Red alert in {min_left}m {sec_left}s)")
                     arduino.send_command(1)
 
-            # Wait 5 seconds before checking the next batch
+            # Wait 1 second before checking the next batch
             time.sleep(1)
 
     except KeyboardInterrupt:
