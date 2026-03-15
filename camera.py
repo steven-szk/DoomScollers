@@ -31,3 +31,12 @@ def release_camera():
     if cap.isOpened():
         cap.release()
     cv2.destroyAllWindows()
+    
+if __name__ == "__main__":
+    # For testing purposes, capture an image and then release the camera
+    if capture_image():
+        print("Image captured successfully.")
+    else:
+        print("Image capture failed.")
+    
+    release_camera()
