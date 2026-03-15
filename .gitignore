@@ -36,3 +36,6 @@ $RECYCLE.BIN/
 .idea/
 *.swp
 *~
+
+# Photo
+captured_images/photo.jpg
