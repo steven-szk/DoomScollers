@@ -107,7 +107,7 @@ if __name__ == "__main__":
     test_serial_data = "D:Out of range"  # exaple data
     
     # Check if the phone is off the table
-    if phone_off_table(test_serial_data):
+    if is_phone_off_table(test_serial_data):
         print("Phone is OFF the table!")
     else:
         print("Phone is ON the table.")
