@@ -26,16 +26,16 @@ try:
         if not ret:
             print("Failed to capture image")
             break
-
-        file_index = capture_count % 5
-        filename = os.path.join(save_folder, f"photo_{file_index}.jpg")
-
-        cv2.imwrite(filename, frame)
-        print(f"Saved: {filename}")
-
-        capture_count += 1
-        time.sleep(5)
         
+        if now - last_run >= interval:
+            file_index = capture_count % 5
+            filename = os.path.join(save_folder, f"photo_{file_index}.jpg")
+
+            cv2.imwrite(filename, frame)
+            print(f"Saved: {filename}")
+
+            capture_count += 1
+            last_run = now
         '''
         change sleep to non blocking code pls, so that we can capture images while the main.py is running and analyzing the images.
         we can use time.time() to check the elapsed time and capture images every 5 seconds
